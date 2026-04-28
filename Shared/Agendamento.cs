@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared
 {
+   
     public class Agendamento
     {
         // Identificação Única
@@ -15,7 +16,7 @@ namespace Shared
         public string RecursoNome { get; set; } // Ex: "Sala de Reuniões 01"
         public string RecursoTipo { get; set; } // Ex: "Sala", "Projetor", "Carro"
 
-        // Dados do Tempo (Essencial para o controle)
+        // Dados do Tempo
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
 
@@ -24,9 +25,7 @@ namespace Shared
         public string Departamento { get; set; }
 
         // Controle de Status
-        public string Status { get; set; } // Ex: "Confirmado", "Cancelado", "Finalizado"
-
-        // Auditoria (Útil para o App Console monitorar)
+        public string Status { get; set; } // Ex: "Confirmado", "Cancelado", "Finalizado"       
         public DateTime DataCriacao { get; set; } = DateTime.Now;
     }
 }
