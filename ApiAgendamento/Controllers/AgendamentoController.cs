@@ -70,8 +70,10 @@ namespace ApiAgendamento.Controllers
             // Busca o agendamento no banco de dados pelo ID.
             var agendamento = await _context.Agendamentos.FindAsync(id);
 
+            // Se o banco retornar nulo - (Erro 404)
             if (agendamento == null)
-                return NotFound("Agendamento não encontrado.");
+                return NotFound(new 
+                { mensagem = $"Agendamento com ID {id} não foi encontrado." });
 
             // Mapeia a entidade do banco para o DTO.
             var dto = new AgendamentoDTO
