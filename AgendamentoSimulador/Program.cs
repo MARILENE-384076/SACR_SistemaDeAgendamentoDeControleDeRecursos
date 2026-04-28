@@ -1,1 +1,1 @@
-﻿
+﻿Console.WriteLine("Simulador de Agendamentos Iniciado...");
