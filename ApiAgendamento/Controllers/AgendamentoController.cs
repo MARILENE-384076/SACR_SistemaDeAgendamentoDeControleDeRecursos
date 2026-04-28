@@ -63,6 +63,17 @@ namespace ApiAgendamento.Controllers
                 return BadRequest("A data de término deve ser maior que a data de início.");
             }
 
+            // Verifica se existe algum agendamento que conflite no horário
+            var conflito = await _context.Agendamentos.AnyAsync(a =>
+                a.RecursoNome == dto.RecursoNome &&
+                dto.DataInicio < a.DataFim &&
+                dto.DataFim > a.DataInicio);
+
+            if (conflito)
+            {
+                return BadRequest("Este recurso já está reservado para o horário selecionado.");
+            }
+
             // Mapeando do DTO, dado que o cliente enviou, para a Entidade (Banco)
             var novoAgendamento = new Agendamento
             {                
@@ -131,6 +142,7 @@ namespace ApiAgendamento.Controllers
             {
                 return BadRequest("A data de término deve ser maior que a data de início.");
             }
+
 
             // Busca o registro existente no banco
             var agendamentoNoBanco = await _context.Agendamentos.FindAsync(id);
