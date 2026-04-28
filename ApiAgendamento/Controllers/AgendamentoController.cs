@@ -90,6 +90,48 @@ namespace ApiAgendamento.Controllers
 
             return Ok(dto);
         }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, AgendamentoDTO dto)
+        {
+            // Valida se o ID da URL bate com o ID do objeto.
+            if (id != dto.Id)
+            {
+                return BadRequest("O ID da URL não coincide com o ID do corpo da requisição.");
+            }
+
+            // Busca o registro existente no banco
+            var agendamentoNoBanco = await _context.Agendamentos.FindAsync(id);
+
+            if (agendamentoNoBanco == null)
+            {
+                return NotFound(new 
+                { mensagem = "Agendamento não encontrado para atualização." });
+            }
+
+            // Atualiza as propriedades do banco com os dados do DTO
+            agendamentoNoBanco.RecursoNome = dto.RecursoNome;
+            agendamentoNoBanco.RecursoTipo = dto.RecursoTipo;
+            agendamentoNoBanco.DataInicio = dto.DataInicio;
+            agendamentoNoBanco.DataFim = dto.DataFim;
+            agendamentoNoBanco.Responsavel = dto.Responsavel;
+            agendamentoNoBanco.Departamento = dto.Departamento;
+            agendamentoNoBanco.Status = dto.Status;
+
+            // Salva as mudanças
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(500,
+                    "Erro ao atualizar o banco de dados.");
+            }
+
+            return Ok(new 
+            { mensagem = "Agendamento atualizado com sucesso!" });
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir(int id)
