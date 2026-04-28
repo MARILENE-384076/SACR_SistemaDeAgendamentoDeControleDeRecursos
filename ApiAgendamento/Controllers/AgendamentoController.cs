@@ -118,6 +118,20 @@ namespace ApiAgendamento.Controllers
                 return BadRequest("O ID da URL não coincide com o ID do corpo da requisição.");
             }
 
+            // Valida Nome do Recurso
+            if (string.IsNullOrWhiteSpace(dto.RecursoNome))
+                return BadRequest("O nome do recurso não pode ser vazio.");
+
+            // Valida Responsável
+            if (string.IsNullOrWhiteSpace(dto.Responsavel))
+                return BadRequest("O responsável não pode ser vazio.");
+
+            //Valida Data
+            if (dto.DataFim <= dto.DataInicio)
+            {
+                return BadRequest("A data de término deve ser maior que a data de início.");
+            }
+
             // Busca o registro existente no banco
             var agendamentoNoBanco = await _context.Agendamentos.FindAsync(id);
 
