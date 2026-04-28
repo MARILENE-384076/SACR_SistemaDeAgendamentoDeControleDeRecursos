@@ -63,6 +63,31 @@ namespace ApiAgendamento.Controllers
             return Ok(new 
             { mensagem = "Agendamento registrado com sucesso!" });
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ObterPorId(int id)
+        {
+            // Busca o agendamento no banco de dados pelo ID.
+            var agendamento = await _context.Agendamentos.FindAsync(id);
+
+            if (agendamento == null)
+                return NotFound("Agendamento não encontrado.");
+
+            // Mapeia a entidade do banco para o DTO.
+            var dto = new AgendamentoDTO
+            {
+                Id = agendamento.Id,
+                RecursoNome = agendamento.RecursoNome,
+                RecursoTipo = agendamento.RecursoTipo,
+                DataInicio = agendamento.DataInicio,
+                DataFim = agendamento.DataFim,
+                Responsavel = agendamento.Responsavel,
+                Departamento = agendamento.Departamento,
+                Status = agendamento.Status
+            };
+
+            return Ok(dto);
+        }
     }
 }
 
