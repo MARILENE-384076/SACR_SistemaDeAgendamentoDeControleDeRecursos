@@ -70,7 +70,7 @@ namespace ApiAgendamento.Controllers
             // Busca o agendamento no banco de dados pelo ID.
             var agendamento = await _context.Agendamentos.FindAsync(id);
 
-            // Se o banco retornar nulo - (Erro 404)
+            // Se o banco retornar nulo - Erro 404)
             if (agendamento == null)
                 return NotFound(new 
                 { mensagem = $"Agendamento com ID {id} não foi encontrado." });
@@ -89,6 +89,27 @@ namespace ApiAgendamento.Controllers
             };
 
             return Ok(dto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Excluir(int id)
+        {
+            // Busca o registro no banco para garantir que ele existe
+            var agendamento = await _context.Agendamentos.FindAsync(id);
+
+            // Se não existir, retorna o erro 404 (NotFound)
+            if (agendamento == null)
+            {
+                return NotFound(new
+                { mensagem = $"Não foi possível excluir: Agendamento com ID {id} não encontrado." });
+            }
+
+            // Se existir, remove o registro do banco
+            _context.Agendamentos.Remove(agendamento);
+            await _context.SaveChangesAsync();
+           
+            return Ok(new 
+            { mensagem = "Agendamento removido com sucesso!" });
         }
     }
 }
