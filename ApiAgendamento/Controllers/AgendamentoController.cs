@@ -144,6 +144,20 @@ namespace ApiAgendamento.Controllers
             }
 
 
+            // Verifica se existe outro agendamento (a.Id != id) para o mesmo recurso
+            // que se sobreponha a este horário
+            var conflito = await _context.Agendamentos.AnyAsync(a =>
+                a.Id != id &&
+                a.RecursoNome == dto.RecursoNome &&
+                dto.DataInicio < a.DataFim &&
+                dto.DataFim > a.DataInicio);
+
+            if (conflito)
+            {
+                return BadRequest("Não foi possível atualizar: Este recurso já está ocupado" +
+                    " por outro agendamento neste horário.");
+            }
+
             // Busca o registro existente no banco
             var agendamentoNoBanco = await _context.Agendamentos.FindAsync(id);
 
