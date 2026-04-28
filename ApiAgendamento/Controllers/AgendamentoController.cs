@@ -18,54 +18,51 @@ namespace ApiAgendamento.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet]        
         public async Task<IActionResult> ListarTodos()
         {
-            // Busca a lista do banco de dados
-            var listaDoBanco = await _context.Agendamentos.ToListAsync();
+            var agendamentos = await _context.Agendamentos.ToListAsync();
 
-            // Cria uma nova lista vazia para os DTOs
-            var listaExibicao = new List<AgendamentoDTO>();
-
-            // Transforma cada item do banco em um DTO de exibição
-            foreach (var item in listaDoBanco)
+            // Mapeia os agendamentos do banco para o DTO, que é a estrutura que será retornada para o cliente.
+            var listaDto = agendamentos.Select(a => new AgendamentoDTO
             {
-                var dto = new AgendamentoDTO
-                {
-                    Id = item.Id,
-                    NomePaciente = item.NomePaciente,
-                    DataHora = item.DataHora,
-                    Procedimento = item.Procedimento
-                };
-                listaExibicao.Add(dto);
-            }
+                Id = a.Id,
+                RecursoNome = a.RecursoNome,
+                RecursoTipo = a.RecursoTipo,
+                DataInicio = a.DataInicio,
+                DataFim = a.DataFim,
+                Responsavel = a.Responsavel,
+                Departamento = a.Departamento,
+                Status = a.Status
+            }).ToList();
 
-            return Ok(listaExibicao);
+            return Ok(listaDto);
         }
 
-        // POST: Transforma DTO -> Banco
         [HttpPost]
-        public async Task<IActionResult> Criar(AgendamentoDTO agendamentoDto)
+        public async Task<IActionResult> Criar(AgendamentoDTO dto)
         {
+            if (dto == null) 
+                return BadRequest("Dados inválidos.");
 
-            if (agendamentoDto == null)
-                return BadRequest("Dados inválidos");
-
-            // Pega o que veio da "tela" (DTO) e passa para o banco (Entidade)
-            var entidadeBanco = new Agendamento
-            {
-                NomePaciente = agendamentoDto.NomePaciente,
-                DataHora = agendamentoDto.DataHora,
-                Procedimento = agendamentoDto.Procedimento
+            // Mapeando do DTO, dado que o cliente enviou, para a Entidade (Banco)
+            var novoAgendamento = new Agendamento
+            {                
+                RecursoNome = dto.RecursoNome,
+                RecursoTipo = dto.RecursoTipo,
+                DataInicio = dto.DataInicio,
+                DataFim = dto.DataFim,
+                Responsavel = dto.Responsavel,
+                Departamento = dto.Departamento,
+                Status = dto.Status
             };
 
-            // Adiciona na fila e salva no arquivo .db
-            _context.Agendamentos.Add(entidadeBanco);
+            _context.Agendamentos.Add(novoAgendamento);
             await _context.SaveChangesAsync();
 
-            return Ok(new { mensagem = "Salvo no banco com sucesso!" });
+            return Ok(new 
+            { mensagem = "Agendamento registrado com sucesso!" });
         }
     }
 }
 
-    
