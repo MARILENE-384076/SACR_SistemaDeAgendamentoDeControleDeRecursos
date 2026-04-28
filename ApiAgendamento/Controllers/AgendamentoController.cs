@@ -45,6 +45,24 @@ namespace ApiAgendamento.Controllers
             if (dto == null) 
                 return BadRequest("Dados inválidos.");
 
+            // Validação Nome do Recurso
+            if (string.IsNullOrWhiteSpace(dto.RecursoNome))
+            {
+                return BadRequest("O nome do recurso é obrigatório.");
+            }
+
+            // Validação Reponsavel
+            if (string.IsNullOrWhiteSpace(dto.Responsavel))
+            {
+                return BadRequest("O nome do responsável é obrigatório.");
+            }
+
+            // Validação de Datas
+            if (dto.DataFim <= dto.DataInicio)
+            {
+                return BadRequest("A data de término deve ser maior que a data de início.");
+            }
+
             // Mapeando do DTO, dado que o cliente enviou, para a Entidade (Banco)
             var novoAgendamento = new Agendamento
             {                
