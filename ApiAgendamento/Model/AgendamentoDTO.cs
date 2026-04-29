@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.DTOs
+namespace ApiAgendamento.Model
 {
     public class AgendamentoDTO
     {

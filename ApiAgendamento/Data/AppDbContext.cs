@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ApiAgendamento.Model;
 
 namespace ApiAgendamento.Data
 {
@@ -7,6 +8,6 @@ namespace ApiAgendamento.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-        public DbSet<Shared.Agendamento> Agendamentos { get; set; }
+        public DbSet<Agendamento> Agendamentos { get; set; }
     }
 }

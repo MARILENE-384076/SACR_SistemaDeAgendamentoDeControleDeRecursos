@@ -1,8 +1,8 @@
-﻿using ApiAgendamento.Data; 
+﻿using ApiAgendamento.Data;
+using ApiAgendamento.Model;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; 
-using Shared;
-using Shared.DTOs;
+using Microsoft.EntityFrameworkCore;
+using ApiAgendamento.Model;
 
 namespace ApiAgendamento.Controllers
 {
