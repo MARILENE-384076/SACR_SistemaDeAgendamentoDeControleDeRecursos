@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Shared; // Certifique-se que o Shared está referenciado
+using Shared; 
 
 namespace AgendamentoSimulador
 {
