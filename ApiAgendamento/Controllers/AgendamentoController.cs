@@ -1,8 +1,8 @@
-﻿using ApiAgendamento.Data;
-using ApiAgendamento.Model;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using ApiAgendamento.Data;
 using ApiAgendamento.Model;
+using Shared; 
 
 namespace ApiAgendamento.Controllers
 {
@@ -90,7 +90,7 @@ namespace ApiAgendamento.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new 
-            { mensagem = "Agendamento registrado com sucesso!" });
+            { mensagem = "Agendamento registrado com sucesso!", id = novoAgendamento.Id });
         }
 
         [HttpGet("{id}")]

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ApiAgendamento.Model;
+using Shared;
 
 namespace ApiAgendamento.Data
 {
