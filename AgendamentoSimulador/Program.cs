@@ -22,10 +22,10 @@ namespace AgendamentoSimulador
             {
                 // GERAÇÃO ALEATÓRIA DE DADOS
                 // Sorteia um recurso de 1 a 10 para aumentar as chances de colisão/sucesso
-                int idRecurso = random.Next(1, 11);
+                int idRecurso = random.Next(1, 3);
 
                 // Sorteia um deslocamento de dias e horas para o futuro
-                int diasNoFuturo = random.Next(0, 30);
+                int diasNoFuturo = random.Next(0, 2);
                 int horaInicio = random.Next(6, 22); 
 
                 var novoAgendamento = new Agendamento
@@ -70,8 +70,8 @@ namespace AgendamentoSimulador
                 Console.ResetColor();
 
                 // INTERVALO ALEATÓRIO ENTRE ENVIOS
-                // Pausa entre 3 e 12 segundos para não travar o processamento da sua máquina
-                await Task.Delay(random.Next(3000, 12000));
+                // Pausa entre 1 e 4 segundos para não travar o processamento da sua máquina
+                await Task.Delay(random.Next(1000, 4000));
             }
         }
     }
