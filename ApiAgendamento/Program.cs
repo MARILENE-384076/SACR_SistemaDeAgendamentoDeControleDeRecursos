@@ -1,7 +1,12 @@
+using ApiAgendamento.Config;
 using ApiAgendamento.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// REGISTRO DAS CONFIGURAÇÕES
+// lê a seção "ApiConfig" do appsettings.json e joga para a classe ApiConfig.cs
+builder.Services.Configure<ApiConfig>(builder.Configuration.GetSection("ApiConfig"));
 
 // Add services to the container.
 
