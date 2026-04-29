@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using ApiAgendamento.Data;
 using ApiAgendamento.Model;
-using Shared; 
+using ApiAgendamento.Config;
+using Shared;
 
 namespace ApiAgendamento.Controllers
 {
@@ -11,11 +13,13 @@ namespace ApiAgendamento.Controllers
     public class AgendamentoController : ControllerBase
     {
         private readonly AppDbContext _context;
-
-        // O CONSTRUTOR:O ASP.NET injeta o banco para usar na variável _context.
-        public AgendamentoController(AppDbContext context)
+        private readonly ApiConfig _config;
+        
+        //CONSTRUTOR: O ASP.NET injeta o Banco e as Configurações do appsettings.json
+        public AgendamentoController(AppDbContext context, IOptions<ApiConfig> config)
         {
             _context = context;
+            _config = config.Value; 
         }
 
         [HttpGet]        
