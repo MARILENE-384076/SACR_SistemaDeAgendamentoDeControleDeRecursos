@@ -1,92 +1,66 @@
 ﻿<Window x:Class="AgendamentoInterface.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SACR - Sistema de Agendamento" Height="550" Width="850">
+        Title="SACR - Sistema de Agendamento" Height="550" Width="950">
+    <!-- Aumentei um pouco a largura para caber as colunas -->
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="320"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0"
-                    Margin="0,0,15,0">
-            <TextBlock Text="Novo Agendamento"
-                       FontSize="20" 
-                       FontWeight="Bold" 
-                       Margin="0,0,0,15"/>
+        <!-- Lado Esquerdo: Formulário (Mantive sua estrutura, apenas organizei visualmente) -->
+        <StackPanel Grid.Column="0" Margin="0,0,15,0">
+            <TextBlock Text="Novo Agendamento" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
 
             <Label Content="Recurso:"/>
-            <TextBox x:Name="txtRecurso"
-                     Margin="0,0,0,10"
-                     Padding="3"/>
+            <TextBox x:Name="txtRecurso" Margin="0,0,0,10" Padding="3"/>
 
             <Label Content="Responsável:"/>
-            <TextBox x:Name="txtResponsavel" 
-                     Margin="0,0,0,10"
-                     Padding="3"/>
+            <TextBox x:Name="txtResponsavel" Margin="0,0,0,10" Padding="3"/>
 
-            <!-- Início -->
             <Label Content="Data e Hora de Início:"/>
-            <StackPanel Orientation="Horizontal" 
-                        Margin="0,0,0,10">
-                <DatePicker x:Name="dpInicio" 
-                            Width="150"/>
-                <ComboBox x:Name="cbHoraInicio" 
-                          Margin="5,0,0,0" 
-                          Width="60"
-                          IsEditable="True"/>
-                <TextBlock Text=":" 
-                           VerticalAlignment="Center" 
-                           Margin="2,0"/>
-                <ComboBox x:Name="cbMinutoInicio"
-                          Width="60"
-                          IsEditable="True"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <DatePicker x:Name="dpInicio" Width="150"/>
+                <ComboBox x:Name="cbHoraInicio" Margin="5,0,0,0" Width="60" IsEditable="True"/>
+                <TextBlock Text=":" VerticalAlignment="Center" Margin="2,0"/>
+                <ComboBox x:Name="cbMinutoInicio" Width="60" IsEditable="True"/>
             </StackPanel>
 
-            
             <Label Content="Data e Hora de Término:"/>
-            <StackPanel Orientation="Horizontal" 
-                        Margin="0,0,0,20">
-                <DatePicker x:Name="dpFim"
-                            Width="150"/>
-                <ComboBox x:Name="cbHoraFim"
-                          Margin="5,0,0,0" 
-                          Width="60"
-                          IsEditable="True"/>
-                <TextBlock Text=":" 
-                           VerticalAlignment="Center"
-                           Margin="2,0"/>
-                <ComboBox x:Name="cbMinutoFim" 
-                          Width="60"
-                          IsEditable="True"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <DatePicker x:Name="dpFim" Width="150"/>
+                <ComboBox x:Name="cbHoraFim" Margin="5,0,0,0" Width="60" IsEditable="True"/>
+                <TextBlock Text=":" VerticalAlignment="Center" Margin="2,0"/>
+                <ComboBox x:Name="cbMinutoFim" Width="60" IsEditable="True"/>
             </StackPanel>
 
             <Button Content="Confirmar Reserva" Click="BtnReservar_Click" 
-                    Background="#007ACC"
-                    Foreground="White"
-                    Height="40"
-                    FontWeight="Bold"/>
+                    Background="#007ACC" Foreground="White" Height="40" FontWeight="Bold"/>
 
-            <TextBlock x:Name="txtStatus" 
-                       Margin="0,15,0,0" 
-                       TextWrapping="Wrap" 
-                       TextAlignment="Center"/>
+            <TextBlock x:Name="txtStatus" Margin="0,15,0,0" TextWrapping="Wrap" TextAlignment="Center"/>
         </StackPanel>
 
+        <!-- Lado Direito: Monitoramento com Colunas Definidas -->
         <DockPanel Grid.Column="1">
-            <TextBlock DockPanel.Dock="Top" 
-                       Text="Monitoramento em Tempo Real"
-                       FontSize="18"
-                       Margin="0,0,0,10"/>
-            <Button DockPanel.Dock="Bottom" 
-                    Content="Atualizar Lista"
-                    Click="BtnAtualizar_Click"
-                    Margin="0,10,0,0" 
-                    Height="30"/>
+            <TextBlock DockPanel.Dock="Top" Text="Monitoramento em Tempo Real" FontSize="18" Margin="0,0,0,10"/>
+            <Button DockPanel.Dock="Bottom" Content="Atualizar Lista" Click="BtnAtualizar_Click" Margin="0,10,0,0" Height="30"/>
+
             <DataGrid x:Name="dgAgendamentos" 
-                      AutoGenerateColumns="True" 
+                      AutoGenerateColumns="False" 
                       IsReadOnly="True" 
-                      AlternatingRowBackground="#F0F0F0"/>
+                      AlternatingRowBackground="#F0F0F0"
+                      GridLinesVisibility="Horizontal"
+                      BorderBrush="#DDDDDD">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="40"/>
+                    <DataGridTextColumn Header="Recurso" Binding="{Binding RecursoNome}" Width="120"/>
+                    <DataGridTextColumn Header="Início" Binding="{Binding DataInicio, StringFormat=\{0:dd/MM/yyyy HH:mm\}}" Width="130"/>
+                    <DataGridTextColumn Header="Término" Binding="{Binding DataFim, StringFormat=\{0:dd/MM/yyyy HH:mm\}}" Width="130"/>
+                    <DataGridTextColumn Header="Responsável" Binding="{Binding Responsavel}" Width="120"/>
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </DockPanel>
     </Grid>
 </Window>
