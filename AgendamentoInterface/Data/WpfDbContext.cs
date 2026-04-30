@@ -11,17 +11,17 @@ namespace AgendamentoInterface.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // 1. Identifica onde o executável está rodando agora
+            // Identifica onde o executável está rodando 
             string caminhoExecucao = AppDomain.CurrentDomain.BaseDirectory;
 
-            // 2. Sobe 3 níveis (net8.0-windows -> Debug -> bin) para chegar na raiz do projeto
+            // Sobe 3 níveis (net8.0-windows -> Debug -> bin) para chegar na raiz do projeto
             string caminhoRaiz = Path.GetFullPath(Path.Combine(caminhoExecucao, @"..\..\..\"));
 
-            // 3. Define o nome do arquivo e monta o caminho final
+            // Define o nome do arquivo banco e monta o caminho final
             string nomeBanco = "sacr_interfacewpf.db";
             string caminhoFinal = Path.Combine(caminhoRaiz, nomeBanco);
 
-            // --- LINHA DE TESTE: Verifique o resultado na aba 'Output' (Saída) do Visual Studio ---
+            // --- LINHA DE TESTE: Verifica o caminho que o banco esta sendo salvo ---
             System.Diagnostics.Debug.WriteLine($"[DEBUG BANCO] O banco está sendo lido em: {caminhoFinal}");
 
             optionsBuilder.UseSqlite($"Data Source={caminhoFinal}");
