@@ -28,12 +28,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    options.RoutePrefix = "documentação";
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "SIMI Sistema Integrado de Monitoramento Industrial v1");
+    options.DocumentTitle = "SARC - (Sistema Integrado de Agendamento de Controle de Recursos) - Docs";
+});
 
 app.UseHttpsRedirection();
 
