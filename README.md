@@ -9,7 +9,6 @@ Esta API foi desenvolvida para gerenciar o agendamento de recursos (como salas, 
 * **DTOs (Data Transfer Objects)**: Garantem a segurança e a separação entre a camada de dados e a camada de exibição.
 
 ## 🛠️ Funcionalidades e Endpoints
-
 A `AgendamentoController` expõe os seguintes recursos:
 
 ### 1. Listar Agendamentos
@@ -38,7 +37,6 @@ A `AgendamentoController` expõe os seguintes recursos:
 ---
 
 ## 📋 Exemplo de Estrutura JSON (DTO)
-
 Para interagir com os endpoints de criação e atualização, utilize o seguinte modelo:
 ```json
 {
@@ -51,46 +49,45 @@ Para interagir com os endpoints de criação e atualização, utilize o seguinte
   "departamento": "TI",
   "status": "Confirmado"
 }
-
 ```
 ## 🏃 Instruções para Execução
 
 ### Pré-requisitos
-*   **SDK .NET 6.0** ou superior.
-*   **Ferramenta de banco de dados**: SQLite, SQL Server ou similar, conforme a configuração do projeto.
+* **SDK .NET 6.0** ou superior.
+* **Ferramenta de banco de dados**: SQLite, SQL Server ou similar, conforme a configuração do projeto.
 
 ### Passo a Passo
 
-1.  **Clonar o Repositório:**
-    ```bash
-    git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
-    cd seu-repositorio
-    ```
+1. **Clonar o Repositório:**
+   
+```bash
+   git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+   cd seu-repositorio
+```
 
-2.  **Restaurar Dependências:**
-    ```bash
-    dotnet restore
-    ```
+   ### 2. Restaurar Dependências
+```bash
+dotnet restore
+```
 
-3.  **Atualizar Banco de Dados:**
-    *Caso utilize o Entity Framework Migrations:*
-    ```bash
-    dotnet ef database update
-    ```
-
-4.  **Rodar a Aplicação:**
-    ```bash
-    dotnet run --project ApiAgendamento
-    ```
-
-5.  **Testar via Swagger:**
-    Acesse a documentação interativa através do navegador:
-    `https://localhost:7075/swagger` (ou a porta indicada no console de execução).
+### 3. Atualizar Banco de Dados
+*Caso utilize o Entity Framework Migrations:*
+```bash
+dotnet ef database update
+```
+### 4. Rodar a Aplicação
+```bash
+dotnet run --project ApiAgendamento
+```
+### 5. Testar via Swagger
+Acesse a documentação interativa através do navegador:
+`https://localhost:7075/swagger` (ou a porta indicada no console de execução).
 
 ---
-
 ## 🛡️ Diferenciais do Projeto
 
 *   **Validação de Sobreposição:** Implementação de lógica robusta que impede que dois eventos ocupem o mesmo recurso simultaneamente.
 *   **Mapeamento de Entidades:** Uso estratégico de **DTOs** para evitar a exposição direta do modelo de banco de dados (Entidade), garantindo maior segurança.
-*   **Tratamento de Erros:** Respostas HTTP semânticas (como `200 OK`, `400 BadRequest` e `404 NotFound`) com mensagens descritivas para facilitar o consumo da API.
+*   **Tratamento de Erros Semânticos:** Respostas HTTP claras (como `200 OK`, `400 BadRequest` e `404 NotFound`) com mensagens descritivas para facilitar o consumo da API.
+*   **Resiliência do Servidor (Erro 500):** Implementação de blocos `try-catch` em todos os endpoints da Controller, garantindo que falhas inesperadas ou erros de concorrência no banco de dados sejam tratados, retornando um status `500 Internal Server Error` padronizado em vez de interromper a execução da API.
+
