@@ -13,7 +13,14 @@ builder.Services.Configure<ApiConfig>(builder.Configuration.GetSection("ApiConfi
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Lê o arquivo XML gerado para exibir os ///summary e remarks na documentação
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+    options.IncludeXmlComments(xmlPath);
+});
 
 // Configuração do Entity Framework Core para usar SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
