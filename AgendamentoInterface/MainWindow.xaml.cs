@@ -1,30 +1,31 @@
-﻿using System;
+﻿using AgendamentoInterface.Data;
+using AgendamentoInterface.Services;
+using AgendamentoInterface.Services.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using ApiAgendamento.Model;
-using Shared; 
 
 namespace AgendamentoInterface
 {
     public partial class MainWindow : Window
     {
-        // Endereço da API (Porta 7075)
-        private readonly HttpClient _client = new 
-            HttpClient { BaseAddress = new Uri("https://localhost:7075/") };
+        private readonly HttpClient _client = new
+            HttpClient
+        { BaseAddress = new Uri("https://localhost:7075/") };
 
         public MainWindow()
         {
             InitializeComponent();
-            _ = CarregarDados(); 
+            _ = CarregarDados();
         }
-        
+
         private async void BtnReservar_Click(object sender, RoutedEventArgs e)
         {
-            var novoAgendamento = new AgendamentoDTO
+            var novoAgendamento = new WpfAgendamentoDTO
             {
                 RecursoNome = txtRecurso.Text,
                 Responsavel = txtResponsavel.Text,
@@ -43,7 +44,10 @@ namespace AgendamentoInterface
                 {
                     txtStatus.Text = "✅ Reserva realizada com sucesso!";
                     txtStatus.Foreground = Brushes.Green;
-                    await CarregarDados(); // Atualiza a tabela 
+                    
+                    await SalvarNoBancoWPF(novoAgendamento);
+
+                    await CarregarDados();
                 }
                 else
                 {
@@ -52,13 +56,13 @@ namespace AgendamentoInterface
                     txtStatus.Foreground = Brushes.OrangeRed;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                txtStatus.Text = "Erro de comunicação com a API.";
+                txtStatus.Text = $"Erro de comunicação com a API: {ex.Message}";
                 txtStatus.Foreground = Brushes.Red;
             }
         }
-        
+
         private async void BtnAtualizar_Click(object sender, RoutedEventArgs e)
         {
             await CarregarDados();
@@ -66,17 +70,34 @@ namespace AgendamentoInterface
             txtStatus.Foreground = Brushes.Gray;
         }
 
-        // Método auxiliar para buscar os dados no banco através da API
         private async Task CarregarDados()
         {
             try
             {
-                var lista = await _client.GetFromJsonAsync<List<AgendamentoDTO>>("api/Agendamento");
+                var lista = await _client.GetFromJsonAsync<List<WpfAgendamentoDTO>>("api/Agendamento");
                 dgAgendamentos.ItemsSource = lista;
             }
             catch (Exception)
             {
-                txtStatus.Text = "Não foi possível carregar os dados.";
+                txtStatus.Text = "Não foi possível carregar os dados da API.";
+                txtStatus.Foreground = Brushes.Red;
+            }
+        }
+        
+        private async Task SalvarNoBancoWPF(WpfAgendamentoDTO dto)
+        {
+            try
+            {
+                using (var db = new WpfDbContext())
+                {
+                    db.Database.EnsureCreated();
+                    db.AgendamentosWPF.Add(dto);
+                    await db.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao salvar no banco WPF: {ex.Message}");
             }
         }
     }
