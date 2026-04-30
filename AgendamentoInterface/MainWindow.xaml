@@ -1,27 +1,23 @@
 ﻿<Window x:Class="AgendamentoInterface.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AgendamentoInterface"
-        mc:Ignorable="d"
-        Title="SACR - Sistema de Agendamento de Controle de Recursos." Height="450" Width="800">
+        Title="SACR - Sistema de Agendamento" Height="550" Width="850">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="320"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
-        <StackPanel Grid.Column="0" 
+
+        <StackPanel Grid.Column="0"
                     Margin="0,0,15,0">
-            <TextBlock Text="Novo Agendamento" 
+            <TextBlock Text="Novo Agendamento"
                        FontSize="20" 
                        FontWeight="Bold" 
-                       Margin="0,0,0,20"/>
+                       Margin="0,0,0,15"/>
 
             <Label Content="Recurso:"/>
-            <TextBox x:Name="txtRecurso" 
-                     Margin="0,0,0,10" 
+            <TextBox x:Name="txtRecurso"
+                     Margin="0,0,0,10"
                      Padding="3"/>
 
             <Label Content="Responsável:"/>
@@ -29,35 +25,62 @@
                      Margin="0,0,0,10"
                      Padding="3"/>
 
-            <Label Content="Início:"/>
-            <DatePicker x:Name="dpInicio"
-                        Margin="0,0,0,10"/>
+            <!-- Início -->
+            <Label Content="Data e Hora de Início:"/>
+            <StackPanel Orientation="Horizontal" 
+                        Margin="0,0,0,10">
+                <DatePicker x:Name="dpInicio" 
+                            Width="150"/>
+                <ComboBox x:Name="cbHoraInicio" 
+                          Margin="5,0,0,0" 
+                          Width="60"
+                          IsEditable="True"/>
+                <TextBlock Text=":" 
+                           VerticalAlignment="Center" 
+                           Margin="2,0"/>
+                <ComboBox x:Name="cbMinutoInicio"
+                          Width="60"
+                          IsEditable="True"/>
+            </StackPanel>
 
-            <Label Content="Término:"/>
-            <DatePicker x:Name="dpFim"
-                        Margin="0,0,0,20"/>
+            
+            <Label Content="Data e Hora de Término:"/>
+            <StackPanel Orientation="Horizontal" 
+                        Margin="0,0,0,20">
+                <DatePicker x:Name="dpFim"
+                            Width="150"/>
+                <ComboBox x:Name="cbHoraFim"
+                          Margin="5,0,0,0" 
+                          Width="60"
+                          IsEditable="True"/>
+                <TextBlock Text=":" 
+                           VerticalAlignment="Center"
+                           Margin="2,0"/>
+                <ComboBox x:Name="cbMinutoFim" 
+                          Width="60"
+                          IsEditable="True"/>
+            </StackPanel>
 
-            <Button Content="Confirmar Reserva"
-                    Click="BtnReservar_Click" 
+            <Button Content="Confirmar Reserva" Click="BtnReservar_Click" 
                     Background="#007ACC"
-                    Foreground="White" 
-                    Height="40" 
+                    Foreground="White"
+                    Height="40"
                     FontWeight="Bold"/>
 
-            <TextBlock x:Name="txtStatus"
+            <TextBlock x:Name="txtStatus" 
                        Margin="0,15,0,0" 
                        TextWrapping="Wrap" 
                        TextAlignment="Center"/>
         </StackPanel>
-        
+
         <DockPanel Grid.Column="1">
-            <TextBlock DockPanel.Dock="Top"
-                       Text="Monitoramento em Tempo Real" 
-                       FontSize="18" 
+            <TextBlock DockPanel.Dock="Top" 
+                       Text="Monitoramento em Tempo Real"
+                       FontSize="18"
                        Margin="0,0,0,10"/>
             <Button DockPanel.Dock="Bottom" 
-                    Content="Atualizar Lista" 
-                    Click="BtnAtualizar_Click" 
+                    Content="Atualizar Lista"
+                    Click="BtnAtualizar_Click"
                     Margin="0,10,0,0" 
                     Height="30"/>
             <DataGrid x:Name="dgAgendamentos" 

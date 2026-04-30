@@ -7,7 +7,10 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.EntityFrameworkCore;
+using AgendamentoInterface.Data;
 
 namespace AgendamentoInterface
 {
@@ -20,7 +23,36 @@ namespace AgendamentoInterface
         public MainWindow()
         {
             InitializeComponent();
+            InicializarHorarios();
             _ = CarregarDados();
+        }
+
+        private void InicializarHorarios()
+        {
+            // Preenche as ComboBoxes de 00 a 23 e 00 a 59
+            for (int i = 0; i < 24; i++)
+            {
+                cbHoraInicio.Items.Add(i.ToString("D2"));
+                cbHoraFim.Items.Add(i.ToString("D2"));
+            }
+            for (int i = 0; i < 60; i += 5)
+            { // Incremento de 5 em 5 minutos
+                cbMinutoInicio.Items.Add(i.ToString("D2"));
+                cbMinutoFim.Items.Add(i.ToString("D2"));
+            }
+            // Valores padrão
+            cbHoraInicio.SelectedIndex = 8; cbMinutoInicio.SelectedIndex = 0;
+            cbHoraFim.SelectedIndex = 9; cbMinutoFim.SelectedIndex = 0;
+            dpInicio.SelectedDate = DateTime.Now;
+            dpFim.SelectedDate = DateTime.Now;
+        }
+
+        private DateTime CombinarDataHora(DatePicker dp, ComboBox cbH, ComboBox cbM)
+        {
+            DateTime data = dp.SelectedDate ?? DateTime.Now;
+            int hora = int.Parse(cbH.Text ?? "0");
+            int minuto = int.Parse(cbM.Text ?? "0");
+            return new DateTime(data.Year, data.Month, data.Day, hora, minuto, 0);
         }
 
         private async void BtnReservar_Click(object sender, RoutedEventArgs e)
@@ -29,8 +61,8 @@ namespace AgendamentoInterface
             {
                 RecursoNome = txtRecurso.Text,
                 Responsavel = txtResponsavel.Text,
-                DataInicio = dpInicio.SelectedDate ?? DateTime.Now,
-                DataFim = dpFim.SelectedDate ?? DateTime.Now.AddHours(1),
+                DataInicio = CombinarDataHora(dpInicio, cbHoraInicio, cbMinutoInicio),
+                DataFim = CombinarDataHora(dpFim, cbHoraFim, cbMinutoFim),
                 Status = "Confirmado",
                 RecursoTipo = "Equipamento",
                 Departamento = "Geral"
@@ -44,30 +76,20 @@ namespace AgendamentoInterface
                 {
                     txtStatus.Text = "✅ Reserva realizada com sucesso!";
                     txtStatus.Foreground = Brushes.Green;
-                    
                     await SalvarNoBancoWPF(novoAgendamento);
-
                     await CarregarDados();
                 }
                 else
                 {
-                    var erro = await response.Content.ReadAsStringAsync();
-                    txtStatus.Text = $"❌ Erro: {erro}";
+                    txtStatus.Text = "❌ Erro ao salvar na API.";
                     txtStatus.Foreground = Brushes.OrangeRed;
                 }
             }
             catch (Exception ex)
             {
-                txtStatus.Text = $"Erro de comunicação com a API: {ex.Message}";
+                txtStatus.Text = $"Erro: {ex.Message}";
                 txtStatus.Foreground = Brushes.Red;
             }
-        }
-
-        private async void BtnAtualizar_Click(object sender, RoutedEventArgs e)
-        {
-            await CarregarDados();
-            txtStatus.Text = "Lista de monitoramento atualizada.";
-            txtStatus.Foreground = Brushes.Gray;
         }
 
         private async Task CarregarDados()
@@ -77,28 +99,33 @@ namespace AgendamentoInterface
                 var lista = await _client.GetFromJsonAsync<List<WpfAgendamentoDTO>>("api/Agendamento");
                 dgAgendamentos.ItemsSource = lista;
             }
-            catch (Exception)
-            {
-                txtStatus.Text = "Não foi possível carregar os dados da API.";
-                txtStatus.Foreground = Brushes.Red;
-            }
+            catch { /* Tratamento de erro */ }
         }
-        
+
         private async Task SalvarNoBancoWPF(WpfAgendamentoDTO dto)
         {
             try
             {
-                using (var db = new WpfDbContext())
+                // Usando o contexto de dados do seu projeto WPF
+                using (var db = new AgendamentoInterface.Data.WpfDbContext())
                 {
-                    db.Database.EnsureCreated();
+                    // Verifica se o arquivo sacr_interface.db existe, se não, ele cria
+                    await db.Database.EnsureCreatedAsync();
+
+                    // Adiciona o seu DTO próprio na tabela AgendamentosWPF
                     db.AgendamentosWPF.Add(dto);
+
+                    // Salva as alterações de forma assíncrona
                     await db.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao salvar no banco WPF: {ex.Message}");
+                // Caso ocorra erro no SQLite local, avisamos no console de depuração
+                System.Diagnostics.Debug.WriteLine($"Erro no banco WPF: {ex.Message}");
             }
         }
+
+        private async void BtnAtualizar_Click(object sender, RoutedEventArgs e) => await CarregarDados();
     }
 }
