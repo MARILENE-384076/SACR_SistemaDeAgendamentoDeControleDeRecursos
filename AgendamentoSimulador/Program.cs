@@ -55,7 +55,7 @@ namespace AgendamentoSimulador
                     }
                     else
                     {
-                        // Aqui captura quando o Random gera um horário que já existe no SQLite
+                        // Captura quando o Random gera um horário que já existe no SQLite
                         string msgErro = await resposta.Content.ReadAsStringAsync();
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine($"[{timestamp}] CONFLITO: {novoAgendamento.RecursoNome} ocupado. Detalhe: {msgErro}");
