@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AgendamentoInterface.Services
+namespace AgendamentoInterface.Services.DTOs
 {
     public class WpfAgendamentoDTO
     {      
